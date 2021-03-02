@@ -212,7 +212,7 @@ func main() {
 			"gdia" : "http://devtest.ibr.cc/grip",
 			"gpa" : "http://www.baidu.com:80",
 			"rc" : 10000,
-			"rct" : 150,
+			"rct" : 15,
 			"s" : "2726b602-07c5-447a-abeb-26a121106754",
 			"sat" : 24,
 			"sp" : 100,
@@ -257,12 +257,13 @@ func main() {
 		fmt.Println("******************************Config下发的服务器时间*****************************")
 		cmt:=gjson.Get(string(result),"cmt").Value()
 		fmt.Println(time.Unix(int64(cmt.(float64)/1000/1000),0).Format("2006-01-02" ),time.Now().Format("2006-01-02"))
-		if time.Unix(int64(cmt.(float64)/1000/1000),0).Format("2006-01-02" )==time.Now().Format("2006-01-02"){
-			fmt.Println("cmt校验正确!")
-		}else {
-			_, _ = fmt.Fprintf(file, "cmt时间戳上报错误,上报值:%v\n", cmt)
-			Utils.EmailTo(fmt.Sprintf("%s捕捉到异常(cmt上报异常):\n,cmt的值为:%v\n,请求体为:%s",time.Now().Format("2006/01/02 15:04:05"),cmt,string(result)))
-		}
+		//if time.Unix(int64(cmt.(float64)/1000/1000),0).Format("2006-01-02" )==time.Now().Format("2006-01-02"){
+		//	fmt.Println("cmt校验正确!")
+		//}else {
+		//	_, _ = fmt.Fprintf(file, "%v[ERROR]:cmt时间戳上报错误,上报值:%v\n", time.Now().Format("2006/01/02 15:04:05"),cmt)
+		//	Utils.EmailTo(fmt.Sprintf("%s捕捉到异常(cmt上报异常):\n,cmt的值为:%v\n,请求体为:%s",time.Now().Format("2006/01/02 15:04:05"),cmt,string(result)))
+		//}
+		Utils.AssertType(gjson.Get(string(result),"cmt").Type,2,file,gjson.Get(string(result),"cmt").Value(),"cmt",string(result))
 //******************设备信息字段校验************************
 		//设备信息的设备ID字段类型断言
 		fmt.Println("****************************设备信息*************************")
