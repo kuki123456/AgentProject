@@ -1,9 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="3f0a52e5-40b4-4818-8d9f-3a578b21ceb4" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Utils/ReadLog.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tmp/runner-build" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EventBusiness/ActionEvent.go" beforeDir="false" afterPath="$PROJECT_DIR$/EventBusiness/ActionEvent.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EventBusiness/CrashEvent.go" beforeDir="false" afterPath="$PROJECT_DIR$/EventBusiness/CrashEvent.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EventBusiness/CustomEvent.go" beforeDir="false" afterPath="$PROJECT_DIR$/EventBusiness/CustomEvent.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EventBusiness/CustomLogEvent.go" beforeDir="false" afterPath="$PROJECT_DIR$/EventBusiness/CustomLogEvent.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EventBusiness/CustomMetricEvent.go" beforeDir="false" afterPath="$PROJECT_DIR$/EventBusiness/CustomMetricEvent.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EventBusiness/H5Event.go" beforeDir="false" afterPath="$PROJECT_DIR$/EventBusiness/H5Event.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EventBusiness/JSErrorEvent.go" beforeDir="false" afterPath="$PROJECT_DIR$/EventBusiness/JSErrorEvent.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EventBusiness/LagEvent.go" beforeDir="false" afterPath="$PROJECT_DIR$/EventBusiness/LagEvent.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EventBusiness/LaunchEvent.go" beforeDir="false" afterPath="$PROJECT_DIR$/EventBusiness/LaunchEvent.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EventBusiness/NetworkEvent.go" beforeDir="false" afterPath="$PROJECT_DIR$/EventBusiness/NetworkEvent.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EventBusiness/StateChangeEvent.go" beforeDir="false" afterPath="$PROJECT_DIR$/EventBusiness/StateChangeEvent.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EventBusiness/ViewEvent.go" beforeDir="false" afterPath="$PROJECT_DIR$/EventBusiness/ViewEvent.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Log/2021214_ERR.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Log/2021219_ERR.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Log/2021221_ERR.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Log/2021222_ERR.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Log/2021223_ERR.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Log/2021224_ERR.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Log/2021225_ERR.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Log/2021226_ERR.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Log/202124_ERR.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Log/202131_ERR.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Log/202132_ERR.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utils/AssertUtil.go" beforeDir="false" afterPath="$PROJECT_DIR$/Utils/AssertUtil.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utils/EmailUtil.go" beforeDir="false" afterPath="$PROJECT_DIR$/Utils/EmailUtil.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.go" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,12 +74,15 @@
     <option name="indexEntireGoPath" value="false" />
   </component>
   <component name="ProjectId" id="1njVBMMoTsv9o1AMV8z8BAiKHrJ" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="DefaultGoTemplateProperty" value="Go File" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -51,6 +102,21 @@
   <component name="UnknownFeatures">
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.log" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
   </component>
@@ -59,6 +125,10 @@
       <screen x="0" y="23" width="1280" height="701" />
     </state>
     <state x="104" y="23" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1280.701@0.23.1280.701" timestamp="1613739457141" />
+    <state x="349" y="182" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1615533846499">
+      <screen x="0" y="23" width="1280" height="721" />
+    </state>
+    <state x="349" y="182" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1280.721@0.23.1280.721" timestamp="1615533846499" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -71,6 +141,11 @@
           <url>file://$PROJECT_DIR$/EventBusiness/LaunchEvent.go</url>
           <line>70</line>
           <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/Utils/ReadLog.go</url>
+          <line>84</line>
+          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

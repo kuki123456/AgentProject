@@ -51,7 +51,7 @@ func SendEmail(email *Email) error{
 }
 
 func EmailTo(send string) {
-	email := NewEmail("huqi@bonree.com","字段类型不存在或值捕捉到异常，请排查！",send)
+	email := NewEmail("huqi@bonree.com","异常统计，请排查！",send)
 	err := SendEmail(email)
 	fmt.Println("result:",err)
 }

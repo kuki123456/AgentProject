@@ -26,31 +26,31 @@ func Assertin(Target float64,EnsureArrary []float64)bool  {
    return false
 }
 //类型判断
-func AssertType(Actualtype gjson.Type,Expecttype gjson.Type,writer io.Writer,Actualvalue interface{},EnsureStr string,curbody string){
+func AssertType(Actualtype gjson.Type,Expecttype gjson.Type,writer io.Writer,Actualvalue interface{},EnsureStr string,curbody,eventname string,){
 	if Actualtype==Expecttype && gjson.Get(curbody,EnsureStr).Exists() {
 		log.Printf("%s类型是%v，值：%v\n",EnsureStr,Expecttype,Actualvalue)
 	}else {
-		_, _ = fmt.Fprintf(writer, "%v[ERROR]:%s的值类型错误：[当前:]%v,[期望:]%v,[当前值:]%v\n", time.Now().Format("2006/01/02 15:04:05"),EnsureStr,Actualtype,Expecttype,Actualvalue)
-		EmailTo(fmt.Sprintf("%s捕捉到异常(字段类型不对或字段不存在)\n,%s的值类型错误：[当前:]%v,[期望:]%v,[当前值:]%v请求体如下，请排查日志:\n\n%s",time.Now().Format("2006/01/02 15:04:05"),EnsureStr,Actualtype,Expecttype,Actualvalue,curbody))
+		_, _ = fmt.Fprintf(writer, "%v[ERROR]:[%s]--%s的值类型错误：[当前:]%v,[期望:]%v,[当前值:]%v\n", time.Now().Format("2006/01/02 15:04:05"),eventname,EnsureStr,Actualtype,Expecttype,Actualvalue)
+		//EmailTo(fmt.Sprintf("%s捕捉到异常(字段类型不对或字段不存在)\n,%s的值类型错误：[当前:]%v,[期望:]%v,[当前值:]%v请求体如下，请排查日志:\n\n%s",time.Now().Format("2006/01/02 15:04:05"),EnsureStr,Actualtype,Expecttype,Actualvalue,curbody))
 		}
 }
 //数值断言
-func AssertNumValue(Actualvalue float64,Expectvalue float64,writer io.Writer,EnsureStr string,curbody string){
+func AssertNumValue(Actualvalue float64,Expectvalue float64,writer io.Writer,EnsureStr string,curbody,eventname string){
 	if Actualvalue!=Expectvalue && gjson.Get(curbody,EnsureStr).Exists() {
-		_, _ = fmt.Fprintf(writer, "%v[ERROR]:%s的值错误：[当前:]%v,[期望:]%v\n",time.Now().Format("2006/01/02 15:04:05"),EnsureStr,Actualvalue,Expectvalue)
-		EmailTo(fmt.Sprintf("%s捕捉到异常(字段值不对)\n,%s的值错误：[当前:]%v,[期望:]%v\n请求体如下，请排查日志:\n\n%s",time.Now().Format("2006/01/02 15:04:05"),EnsureStr,Actualvalue,Expectvalue,curbody))
+		_, _ = fmt.Fprintf(writer, "%v[ERROR]:[%s]--%s的值错误：[当前:]%v,[期望:]%v\n",time.Now().Format("2006/01/02 15:04:05"),eventname,EnsureStr,Actualvalue,Expectvalue)
+		//EmailTo(fmt.Sprintf("%s捕捉到异常(字段值不对)\n,%s的值错误：[当前:]%v,[期望:]%v\n请求体如下，请排查日志:\n\n%s",time.Now().Format("2006/01/02 15:04:05"),EnsureStr,Actualvalue,Expectvalue,curbody))
 	}else {
 		log.Printf("%s值是%v，值：%v\n",EnsureStr,Expectvalue,Actualvalue)
 	}
 
 }
 //断言是否是bool值
-func AssertBool(Actualtype gjson.Type,writer io.Writer,Actualvalue interface{},EnsureStr string,curbody string){
+func AssertBool(Actualtype gjson.Type,writer io.Writer,Actualvalue interface{},EnsureStr string,eventname string){
 	if Actualtype==1 || Actualtype==4  {
 		log.Printf("%s类型是%v，值：%v\n",EnsureStr,Actualtype,Actualvalue)
 		}else {
-		_, _ = fmt.Fprintf(writer, "%v[ERROR]:%s的值类型错误：[当前:]%v,[期望:]%v,[当前值:]%v\n", time.Now().Format("2006/01/02 15:04:05"),EnsureStr,Actualtype,"False or True",Actualvalue)
-		EmailTo(fmt.Sprintf("%s捕捉到异常(字段类型不对或字段不存在)\n,%s的值类型错误：[当前:]%v,[期望:]%v,[当前值:]%v请求体如下，请排查日志:\n\n%s",time.Now().Format("2006/01/02 15:04:05"),EnsureStr,Actualtype,Actualtype,Actualvalue,curbody))
+		_, _ = fmt.Fprintf(writer, "%v[ERROR]:[%s]--%s的值类型错误：[当前:]%v,[期望:]%v,[当前值:]%v\n", time.Now().Format("2006/01/02 15:04:05"),eventname,EnsureStr,Actualtype,"False or True",Actualvalue)
+		//EmailTo(fmt.Sprintf("%s捕捉到异常(字段类型不对或字段不存在)\n,%s的值类型错误：[当前:]%v,[期望:]%v,[当前值:]%v请求体如下，请排查日志:\n\n%s",time.Now().Format("2006/01/02 15:04:05"),EnsureStr,Actualtype,"False or True",Actualvalue,curbody))
 	}
 }
 //事件业务所对应的事件发生事件戳与用户信息，设备状态信息，网络信息
@@ -62,7 +62,7 @@ func AssertEventSin(BusinessBody string,file io.Writer,requestbody string,Busine
 		fmt.Println("ent校验正确!")
 	}else {
 		_, _ = fmt.Fprintf(file, "%v[ERROR]:%s的ent上报异常，值为:%v\n", time.Now().Format("2006/01/02 15:04:05"),BusinessName,ent)
-		EmailTo(fmt.Sprintf("%s--%s捕捉到异常(ent上报异常):\n,ent的值为:%v\n,请求体为:%s",time.Now().Format("2006/01/02 15:04:05"),BusinessName,ent,BusinessBody))
+		//EmailTo(fmt.Sprintf("%s--%s捕捉到异常(ent上报异常):\n,ent的值为:%v\n,请求体为:%s",time.Now().Format("2006/01/02 15:04:05"),BusinessName,ent,BusinessBody))
 
 	}
 	//sin索引值
@@ -77,35 +77,35 @@ func AssertEventSin(BusinessBody string,file io.Writer,requestbody string,Busine
 					fmt.Printf("ui与ei校验成功,ui:%v,ei:%v!\n",gjson.Get(requestbody,"ui."+value.(string)+".ui"),gjson.Get(requestbody,"ui."+value.(string)+".ei"))
 				}else {
 					_, _ = fmt.Fprintf(file, "%v[ERROR]:ui上报异常,ui值为%v", time.Now().Format("2006/01/02 15:04:05"),gjson.Get(requestbody,"ui."+value.(string)))
-					EmailTo(fmt.Sprintf("%s--%s对应的用户信息校验异常,请求体为:\n%s",time.Now().Format("2006/01/02 15:04:05"),BusinessName))
+					//EmailTo(fmt.Sprintf("%s--%s对应的用户信息校验异常,请求体为:\n%s",time.Now().Format("2006/01/02 15:04:05"),BusinessName))
 				}
 			}
 		}
 		//设备状态信息校验
 		if index==1{
 			//suc
-			AssertType(gjson.Get(requestbody,"ds."+value.(string)+".suc").Type,2,file,gjson.Get(requestbody,"ds."+value.(string)+".suc"),"ds."+value.(string)+".suc",requestbody)
+			AssertType(gjson.Get(requestbody,"ds."+value.(string)+".suc").Type,2,file,gjson.Get(requestbody,"ds."+value.(string)+".suc"),"ds."+value.(string)+".suc",requestbody,BusinessName)
 			//auc
-			AssertType(gjson.Get(requestbody,"ds."+value.(string)+".auc").Type,2,file,gjson.Get(requestbody,"ds."+value.(string)+".auc"),"ds."+value.(string)+".auc",requestbody)
+			AssertType(gjson.Get(requestbody,"ds."+value.(string)+".auc").Type,2,file,gjson.Get(requestbody,"ds."+value.(string)+".auc"),"ds."+value.(string)+".auc",requestbody,BusinessName)
 			//aura
-			AssertType(gjson.Get(requestbody,"ds."+value.(string)+".aura").Type,2,file,gjson.Get(requestbody,"ds."+value.(string)+".aura"),"ds."+value.(string)+".aura",requestbody)
+			AssertType(gjson.Get(requestbody,"ds."+value.(string)+".aura").Type,2,file,gjson.Get(requestbody,"ds."+value.(string)+".aura"),"ds."+value.(string)+".aura",requestbody,BusinessName)
 			//sab
-			AssertType(gjson.Get(requestbody,"ds."+value.(string)+".sab").Type,2,file,gjson.Get(requestbody,"ds."+value.(string)+".sab"),"ds."+value.(string)+".sab",requestbody)
+			AssertType(gjson.Get(requestbody,"ds."+value.(string)+".sab").Type,2,file,gjson.Get(requestbody,"ds."+value.(string)+".sab"),"ds."+value.(string)+".sab",requestbody,BusinessName)
 			//saro
-			AssertType(gjson.Get(requestbody,"ds."+value.(string)+".saro").Type,2,file,gjson.Get(requestbody,"ds."+value.(string)+".saro"),"ds."+value.(string)+".saro",requestbody)
+			AssertType(gjson.Get(requestbody,"ds."+value.(string)+".saro").Type,2,file,gjson.Get(requestbody,"ds."+value.(string)+".saro"),"ds."+value.(string)+".saro",requestbody,BusinessName)
 			//sara
-			AssertType(gjson.Get(requestbody,"ds."+value.(string)+".sara").Type,2,file,gjson.Get(requestbody,"ds."+value.(string)+".sara"),"ds."+value.(string)+".sara",requestbody)
+			AssertType(gjson.Get(requestbody,"ds."+value.(string)+".sara").Type,2,file,gjson.Get(requestbody,"ds."+value.(string)+".sara"),"ds."+value.(string)+".sara",requestbody,BusinessName)
 			//ot
-			AssertNumValue(gjson.Get(requestbody,"ds."+value.(string)+".ot").Value().(float64),1,file,"ds."+value.(string)+".ot",requestbody)
+			AssertNumValue(gjson.Get(requestbody,"ds."+value.(string)+".ot").Value().(float64),1,file,"ds."+value.(string)+".ot",requestbody,BusinessName)
 			//s
-			AssertType(gjson.Get(requestbody,"ds."+value.(string)+".s").Type,2,file,gjson.Get(requestbody,"ds."+value.(string)+".s"),"ds."+value.(string)+".s",requestbody)
+			AssertType(gjson.Get(requestbody,"ds."+value.(string)+".s").Type,2,file,gjson.Get(requestbody,"ds."+value.(string)+".s"),"ds."+value.(string)+".s",requestbody,BusinessName)
 		}
 		//网络状态信息校验
 		if index==2{
 			if gjson.Get(requestbody,"nsi."+value.(string)+".ns").Raw!="NaN" {
-				AssertType(gjson.Get(requestbody, "nsi."+value.(string)+".ns").Type, 3, file, gjson.Get(requestbody, "nsi."+value.(string)+".ns"), "nsi."+value.(string)+".ns", requestbody)
-				AssertType(gjson.Get(requestbody, "nsi."+value.(string)+".dip").Type, 3, file, gjson.Get(requestbody, "nsi."+value.(string)+".dip"), "nsi."+value.(string)+".dip", requestbody)
-				AssertType(gjson.Get(requestbody, "nsi."+value.(string)+".dsi").Type, 3, file, gjson.Get(requestbody, "nsi."+value.(string)+".dsi"), "nsi."+value.(string)+".dsi", requestbody)
+				AssertType(gjson.Get(requestbody, "nsi."+value.(string)+".ns").Type, 3, file, gjson.Get(requestbody, "nsi."+value.(string)+".ns"), "nsi."+value.(string)+".ns", requestbody,BusinessName)
+				AssertType(gjson.Get(requestbody, "nsi."+value.(string)+".dip").Type, 3, file, gjson.Get(requestbody, "nsi."+value.(string)+".dip"), "nsi."+value.(string)+".dip", requestbody,BusinessName)
+				AssertType(gjson.Get(requestbody, "nsi."+value.(string)+".dsi").Type, 3, file, gjson.Get(requestbody, "nsi."+value.(string)+".dsi"), "nsi."+value.(string)+".dsi", requestbody,BusinessName)
 			}else {
 				fmt.Println("网络状态信息为无网！")
 			}
