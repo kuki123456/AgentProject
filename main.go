@@ -15,6 +15,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 func max(vals...float64) float64 {
@@ -40,6 +41,10 @@ func min(vals...float64) float64 {
 var lastmaxent float64
 var temmin float64
 var count int
+type param struct {
+	Url string `json:"url"`
+	Data string `json:"data"`
+}
 type ToolStruct struct {
 	Ai  ToolStruct_sub1 `json:"ai"`
 	Di  ToolStruct_sub2 `json:"di"`
@@ -97,6 +102,14 @@ func ParseGzip(data []byte) ([]byte, error) {
 		return undatas, nil
 	}
 }
+func CompressGzip(data []byte)*bytes.Buffer{
+	var result bytes.Buffer
+	newwriter :=gzip.NewWriter(&result)
+	defer newwriter.Close()
+	_, _ = newwriter.Write(data)
+	_ = newwriter.Flush()
+	return &result
+}
 /*字段类型断言：
 0：null
 1：bool-false
@@ -114,11 +127,11 @@ func ReturninputMap(input int)[]map[string]interface{} {
 	case 2:
 		return []map[string]interface{}{{"c":100,"n":"crash"}}
 	case 3:
-		return []map[string]interface{}{{"c":100,"n":"view","tv":2000}}
+		return []map[string]interface{}{{"c":100,"n":"view","tv":200}}
 	case 4:
-		return []map[string]interface{}{{"c":100,"n":"coollaunch","tv":5000}}
+		return []map[string]interface{}{{"c":100,"n":"coollaunch","tv":500},{"c":100,"n":"hotlaunch","tv":200}}
 	case 5:
-		return []map[string]interface{}{{"c":100,"n":"hotlaunch","tv":2000}}
+		return []map[string]interface{}{{"c":100,"n":"coollaunch","tv":500},{"c":100,"n":"hotlaunch","tv":200}}
 	case 6:
 		return []map[string]interface{}{{"c":100,"n":"action","tv":3000}}
 	case 7:
@@ -135,7 +148,10 @@ func ReturninputMap(input int)[]map[string]interface{} {
 	case 12:
 		return []map[string]interface{}{{"c":100,"n":"custommetric"}}
 	case 13:
-		return []map[string]interface{}{{"c":100,"n":"network"},{"c":100,"n":"h5"},{"c":100,"n":"view","tv":2000},{"c":100,"n":"crash"},{"c":100,"n":"coollaunch","tv":1000},{"c":100,"n":"hotlaunch","tv":200},{"c":100,"n":"action","tv":3000},{"c":100,"n":"statechange"},{"c":100,"n":"anr"},{"c":100,"n":"customlog"},{"c":100,"n":"customevent"},{"c":100,"n":"custommetric"},{"c":100,"n":"lagfps","tv":55},{"c":10,"n":"lagstuck","tv":15}}
+		return []map[string]interface{}{{"c":100,"n":"routechange"}}
+	case 14:
+		//return []map[string]interface{}{{"c":100,"n":"network"},{"c":100,"n":"h5"},{"c":100,"n":"view","tv":2000},{"c":100,"n":"crash"},{"c":100,"n":"coollaunch","tv":500},{"c":100,"n":"hotlaunch","tv":200},{"c":100,"n":"action","tv":3000},{"c":100,"n":"statechange"},{"c":100,"n":"anr"},{"c":100,"n":"customlog"},{"c":100,"n":"customevent"},{"c":100,"n":"custommetric"},{"c":100,"n":"lag","tv":6}}
+		return []map[string]interface{}{{"n":"routechange","c":100},{"c":100,"n":"network"},{"c":100,"n":"h5"},{"c":100,"n":"view","tv":2000},{"c":100,"n":"crash"},{"c":100,"n":"coollaunch","tv":500},{"c":100,"n":"hotlaunch","tv":200},{"c":100,"n":"action","tv":3000},{"c":100,"n":"statechange"},{"c":100,"n":"anr"},{"c":100,"n":"customlog"},{"c":100,"n":"customevent"},{"c":100,"n":"custommetric"},{"c":100,"n":"lagfps","tv":59},{"c":100,"n":"lagstuck","tv":6}}
 	default:
 		log.Println("输入有误！")
 	}
@@ -145,6 +161,7 @@ var logtask ="Documents/BRSDK/Log/log-2021-01-04-11-13-25.txt"
 func main() {
 	// 创建一个默认的路由引擎
 	r := gin.Default()
+	r.LoadHTMLFiles("./custom-service.html")
 	r.GET("set", func(context *gin.Context) {
 	    task:=context.Query("task")
 	    logtask=task
@@ -186,15 +203,22 @@ func main() {
 	//var ip string
 	//fmt.Println("请输入upload的IP地址！")
 	//fmt.Scanln(&ip)
+	r.GET("/test", func(context *gin.Context) {
+		context.HTML(http.StatusOK,"custom-service.html",gin.H{"hello":"world"})
+	})
 	r.POST("/config",func(c *gin.Context){
-		_ = c.Query("v")
-		_ = c.Query("a")
-		_ = c.Query("d")
+		version :=c.Query("v")
+		appid :=c.Query("a")
+		device := c.Query("d")
 		//请求体解析分析
 		var request_body ToolStruct
 		body,_ := ioutil.ReadAll(c.Request.Body)
+		Address :="http://devtest.ibr.cc:20107/config?"+"v="+version+"&a="+appid+"&d="+device
+		//转发到对应测试环境
+		fmt.Println("ADDRESS",Address)
 		result,_:=ParseGzip(body)
 		err:=json.Unmarshal(result,&request_body)
+		RESPONSE:=Utils.CONFIGData(Address,strings.NewReader(string(result)))
 		log.Printf("CONFIG请求body是：%v",string(result))
 		log.Println(c.ClientIP())
 		if err!=nil{
@@ -202,7 +226,7 @@ func main() {
 		}
 		//var mc int
 		//mc,_=strconv.Atoi(input)
-		var cp=map[string]interface{}{"log":map[string]interface{}{"upload_user_info":"http://192.168.1.152:8080/update/userinfo","upload_logfile":"http://192.168.1.152:8080/upload/logfile","get_logtask":"http://192.168.1.152:8080/get/logtask"},"speed":""}
+		var cp=map[string]interface{}{"log":map[string]interface{}{"upload_user_info":"http://192.168.1.152:8080/update/userinfo","upload_logfile":"http://192.168.31.124:8080/upload/logfile","get_logtask":"http://192.168.31.124:8080/get/logtask"},"speed":""}
 		cp_byte,_:=json.Marshal(cp)
 		cp_json:=string(cp_byte)
 		c.JSON(http.StatusOK, gin.H{
@@ -212,26 +236,29 @@ func main() {
 			"gpa" : "http://www.baidu.com:80",
 			"rc" : 10000,
 			"rct" : 15,
-			"s" : fmt.Sprintf("2726b602-07c5-447a-abeb-26a121106754%v",int32(time.Now().Unix())),
+			//"s" : fmt.Sprintf("2726b602-07c5-447a-abeb-26a121106754%v",int32(time.Now().Unix())),
+			"s":gjson.Get(RESPONSE,"s").String(),
 			"sat" : 24,
 			"sp" : 100,
 			"spt" : 1440,
 			"st" : int64(time.Now().UnixNano())/1000,
-			"ua" : fmt.Sprintf("http://%v:8080/upload","192.168.1.152"),
-			"mc":ReturninputMap(13),
+			"ua" : fmt.Sprintf("http://%v:8080/upload","192.168.31.124"),
+			//"ua":"http://devtest.ibr.cc:20107/upload",
+			"mc":ReturninputMap(14),
            "cp":cp_json,
            "cbhk":[]string{"a","b"},
 			"cbbk":[]string{"a","b"},
 			"cbqk":[]string{"a","b"},
+			"usc":1,
 
 		})
 		})
 	r.POST("/upload",func(c *gin.Context){
 		file,_:=os.OpenFile(fmt.Sprintf("./log/%v%v%v_ERR.log",time.Now().Year(),int(time.Now().Month()),time.Now().Day()),os.O_APPEND|os.O_CREATE|os.O_WRONLY|os.O_RDONLY,os.ModeAppend|os.ModePerm)
 		defer file.Close()
-		_=c.Query("v")
-		_=c.Query("a")
-		_=c.Query("d")
+		version :=c.Query("v")
+		appid :=c.Query("a")
+		device :=c.Query("d")
 		var request_body map[string]interface{}
 		body,_ := ioutil.ReadAll(c.Request.Body)
 		result,_:=ParseGzip(body)
@@ -240,7 +267,30 @@ func main() {
 			log.Panicf("请求体解析错误：%v",err)
 		}else {
 			log.Printf("UPLOAD请求body是：%v\n",request_body)
+			log.Printf("UPLOAD请求body是：%v\n",string(result))
 		}
+		Address :="http://devtest.ibr.cc:20107/upload?"+"v="+version+"&a="+appid+"&d="+device
+		fmt.Println("ADDRESS\n",Address)
+		////转发到对应测试环境
+		paramer:=param{
+			Url: Address,
+			Data: string(result),
+		}
+		param_byte,_:=json.Marshal(paramer)
+		Utils.UPLOADData("http://127.0.0.1:8000/upload",strings.NewReader(string(param_byte)))
+		//command := exec.Command("/Users/wangxiaoxiao/AgentProject/Utils/venv/bin/python", "/Users/wangxiaoxiao/AgentProject/Utils/upload.py ",Address,string(result))
+		//////创建获取命令输出管道
+		//out, err := command.CombinedOutput()
+		//if err != nil {
+		//	fmt.Printf("combined out:\n%s\n", string(out))
+		//	log.Fatalf("cmd.Run() failed with %s\n", err)
+		//}
+		//fmt.Printf("combined out:\n%s\n", string(out))
+		//执行命令
+		//if err := cmd.Start(); err != nil {
+		//	fmt.Println("Error:The command is err,", err)
+		//	return
+		//}
 		fmt.Println("******************************sdk版本*****************************")
 		v:=gjson.Get(string(result),"v")
 		Utils.AssertType(v.Type,3,file,v,"v",string(result),"UPLOAD")
@@ -361,9 +411,9 @@ func main() {
 		an:=gjson.Get(string(result), "ai.an")
 		Utils.AssertType(an.Type,3,file,an,"ai.an",string(result),"UPLOAD")
 		//渠道商
-		ai_ci:=gjson.Get(string(result), "ai.ci")
-		Utils.AssertType(ai_ci.Type,3,file,ai_ci,"ai.ci",string(result),"UPLOAD")
-		//app版本
+		if gjson.Get(string(result), "ai.ci").Exists() {
+			Utils.AssertType(gjson.Get(string(result), "ai.ci").Type, 3, file, gjson.Get(string(result), "ai.ci"), "ai.ci", string(result), "UPLOAD")
+		}//app版本
 		av:=gjson.Get(string(result), "ai.av")
 		Utils.AssertType(av.Type,3,file,av,"ai.av",string(result),"UPLOAD")
 /****************************************appinfo end************************************/
@@ -378,6 +428,9 @@ func main() {
 			for _,val:=range gjson.Get(string(result),"ti").Array(){
 				Utils.AssertType(gjson.Get(val.String(),"tu").Type,2,file,gjson.Get(val.String(),"tu").Value(),"tu",val.String(),"UPLOAD")
 				Utils.AssertType(gjson.Get(val.String(),"sin").Type,3,file,gjson.Get(val.String(),"sin").Value(),"sin",val.String(),"UPLOAD")
+			}
+			if gjson.Get(string(result),"ui").Exists(){
+				log.Print("ui 存在！")
 			}
 		/****************************************设备状态信息*************************************/
 fmt.Println("*******************************各事件业务****************************************")
@@ -422,38 +475,43 @@ fmt.Println("*******************************各事件业务*********************
 			case "h5":
 				fmt.Println("***************************检测H5************************")
 				EventBusiness.H5EventBusiness(value.String(),string(result),file)
+			case "routechange":
+				fmt.Println("***************************检测routechange************************")
+				EventBusiness.RouteChangeEventBusiness(value.String(),string(result),file)
 			}
-
-		}
-		if count==0{
-			lastmaxent=max(testarrary...)
-			temmin=min(testarrary...)
-			if lastmaxent-temmin==gjson.Get(string(result),"usd").Num{
-				fmt.Println("首包usd正常!")
-			}
-			count=count+1
-		}else {
-			fmt.Println("上一包最大的ent:",lastmaxent)
-			fmt.Println("当前包最大的ent:",max(testarrary...))
-			fmt.Println("当前包最小的ent:",min(testarrary...))
-			fmt.Println("当前temmin",temmin)
+		//}
+		//if count==0{
+		//	lastmaxent=max(testarrary...)
+		//	temmin=min(testarrary...)
+		//	if lastmaxent-temmin==gjson.Get(string(result),"usd").Num{
+		//		fmt.Println("首包usd正常!")
+		//	}
+		//	count=count+1
+		//}else {
+		//	fmt.Println("上一包最大的ent:",lastmaxent)
+		//	fmt.Println("当前包最大的ent:",max(testarrary...))
+		//	fmt.Println("当前包最小的ent:",min(testarrary...))
+		//	fmt.Println("当前temmin",temmin)
 			fmt.Println("usd",gjson.Get(string(result),"usd").Num)
-			if gjson.Get(string(result),"usd").Num >1610000000000000 {
+			if gjson.Get(string(result),"usd").Num >3600000000 {
+				     fmt.Fprintf(file,"%v[ERROR]:[UPLOAD]的usd异常！\n", time.Now().Format("2006/01/02 15:04:05"))
 					fmt.Fprintf(file,"%s\n",string(result))
 			}
-			if max(testarrary...)-lastmaxent==gjson.Get(string(result),"usd").Num{
-				fmt.Println("usd正常!")
-			}else {
-				fmt.Println("usd异常!")
-			}
+			//if max(testarrary...)-lastmaxent==gjson.Get(string(result),"usd").Num{
+			//	fmt.Println("usd正常!")
+			//}else {
+			//	fmt.Println("usd异常!")
+			//}
 			if gjson.Get(string(result),"usd").Num<0{
 				Utils.EmailTo("usd出现负值")
+				fmt.Fprintf(file,"%v[ERROR]:[UPLOAD]的usd异常！\n", time.Now().Format("2006/01/02 15:04:05"))
+				fmt.Fprintf(file,"%s\n",string(result))
 			}
-			if temmin>min(testarrary...){
-				fmt.Println("temmin yichang!")
-				temmin=min(testarrary...)
-			}
-			lastmaxent=max(testarrary...)
+			//if temmin>min(testarrary...){
+			//	fmt.Println("temmin yichang!")
+			//	temmin=min(testarrary...)
+			//}
+			//lastmaxent=max(testarrary...)
 		}
 		c.JSON(http.StatusOK, gin.H{
 			"rc":10000,
@@ -487,5 +545,5 @@ fmt.Println("*******************************各事件业务*********************
 		Utils.InitCount()
 	})
 	c.Start()
-	r.Run()
+	r.Run("192.168.31.124:8080")
 	}

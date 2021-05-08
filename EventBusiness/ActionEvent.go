@@ -17,7 +17,16 @@ func ActionEventBusiness(ActionEventbody string,requestbody string,file io.Write
 	if Utils.Assertin(gjson.Get(ActionEventbody, "v.t").Num, typeslice) {
 		fmt.Println("t值在范围中!")
 	} else {
-		_, _ = fmt.Fprintf(file, "%v[ERROR]:[ActionEvent]--%s的值错误：[当前:]%v,[期望:]%v\n", time.Now().Format("2006/01/02 15:04:05"), "art", gjson.Get(ActionEventbody, "v.t").Num, typeslice)
+		_, _ = fmt.Fprintf(file, "%v[ERROR]:[ActionEvent]--%s的值错误：[当前:]%v,[期望:]%v\n", time.Now().Format("2006/01/02 15:04:05"), "t", gjson.Get(ActionEventbody, "v.t").Num, typeslice)
+		//Utils.EmailTo(fmt.Sprintf("%s捕捉到异常(art值不在范围内)\n,%s的值类型错误：[当前:]%v,[期望:]%v请求体如下，请排查日志:\n%s", time.Now().Format("2006/01/02 15:04:05"), "art", gjson.Get(ActionEventbody, "v.t").Num, typeslice, ActionEventbody))
+	}
+	//source of action 操作来源 「0:原生 1:JS 2:RN」[非空字段]
+	source_slice:=[]float64{0, 1, 2}
+	Utils.AssertType(gjson.Get(ActionEventbody, "v.sa").Type, 2, file, gjson.Get(ActionEventbody, "v.n"), "v.n", ActionEventbody,"ActionEvent")
+	if Utils.Assertin(gjson.Get(ActionEventbody, "v.sa").Num, typeslice) {
+		fmt.Println("t值在范围中!")
+	} else {
+		_, _ = fmt.Fprintf(file, "%v[ERROR]:[ActionEvent]--%s的值错误：[当前:]%v,[期望:]%v\n", time.Now().Format("2006/01/02 15:04:05"), "art", gjson.Get(ActionEventbody, "v.sa").Num, source_slice)
 		//Utils.EmailTo(fmt.Sprintf("%s捕捉到异常(art值不在范围内)\n,%s的值类型错误：[当前:]%v,[期望:]%v请求体如下，请排查日志:\n%s", time.Now().Format("2006/01/02 15:04:05"), "art", gjson.Get(ActionEventbody, "v.t").Num, typeslice, ActionEventbody))
 	}
 	//"n":"",//name 名称 「method」[非空字段]
@@ -27,7 +36,7 @@ func ActionEventBusiness(ActionEventbody string,requestbody string,file io.Write
 	//"vn":"",//view name 发生视图名称 [非空字段]
 	Utils.AssertType(gjson.Get(ActionEventbody, "v.vn").Type, 3, file, gjson.Get(ActionEventbody, "v.vn"), "v.vn", ActionEventbody,"ActionEvent")
 	//"ic":true,//is custom 是否是自定义 [默认值false,非空字段]
-	Utils.AssertBool(gjson.Get(ActionEventbody, "v.ic").Type, file, gjson.Get(ActionEventbody, "v.ic").Value(), "v.ic","ActionEvent")
+	Utils.AssertBool(gjson.Get(ActionEventbody, "v.ic").Type, file, gjson.Get(ActionEventbody, "v.ic").Value(), "v.ic",ActionEventbody,"ActionEvent")
 	//"p":"",//param 参数 [非必要字段]
 	if gjson.Get(ActionEventbody, "v.p").Exists() {
 		Utils.AssertType(gjson.Get(ActionEventbody, "v.p").Type, 3, file, gjson.Get(ActionEventbody, "v.p"), "v.p", ActionEventbody,"ActionEvent")
@@ -38,13 +47,13 @@ func ActionEventBusiness(ActionEventbody string,requestbody string,file io.Write
 	if gjson.Get(ActionEventbody, "v.ic").Bool() {
 		fmt.Println("当前为自定义操作数据!")
 	} else {
-		Utils.AssertBool(gjson.Get(ActionEventbody, "v.is").Type, file, gjson.Get(ActionEventbody, "v.is").Value(), "v.is","ActionEvent")
+		Utils.AssertBool(gjson.Get(ActionEventbody, "v.is").Type, file, gjson.Get(ActionEventbody, "v.is").Value(), "v.is",ActionEventbody,"ActionEvent")
 	}
 	//"tmi":[{}],//ThreadMethodInfo 线程方法信息 [慢操作线程方法信息,非必要字段]
 	if gjson.Get(ActionEventbody, "v.is").Bool() {
 		for _, value := range gjson.Get(ActionEventbody, "v.tmi").Array() {
 			Utils.AssertType(gjson.Get(value.String(), "ti").Type, 3, file, gjson.Get(value.String(), "ti"), "ti", value.String(),"ActionEvent")
-			Utils.AssertBool(gjson.Get(value.String(), "im").Type, file, gjson.Get(value.String(), "im"), "LaunchEvent.tmi.im","ActionEvent")
+			Utils.AssertBool(gjson.Get(value.String(), "im").Type, file, gjson.Get(value.String(), "im"), "LaunchEvent.tmi.im",ActionEventbody,"ActionEvent")
 			Utils.AssertType(gjson.Get(value.String(), "n").Type, 3, file, gjson.Get(value.String(), "n"), "n", value.String(),"ActionEvent")
 			Utils.AssertType(gjson.Get(value.String(), "mi").Type, 5, file, gjson.Get(value.String(), "mi"), "mi", value.String(),"ActionEvent")
 			for _, element := range gjson.Get(value.String(), "mi").Array() {

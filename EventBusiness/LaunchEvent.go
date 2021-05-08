@@ -9,14 +9,16 @@ import (
 )
 
 func LaunchEventBusiness(LaunchEventbody string,requestbody string,file io.Writer){
+	typeslice:=[]float64{1,2,3}
 	//sin对应的索引json结构校验与事件发生事件戳校验
 	Utils.AssertEventSin(LaunchEventbody, file, requestbody, "[LaunchEvent]")
 	//t启动类型
 	Utils.AssertType(gjson.Get(LaunchEventbody,"v.t").Type,2,file,gjson.Get(LaunchEventbody,"v.t"),"v.t",LaunchEventbody,"LaunchEvent")
-	if gjson.Get(LaunchEventbody,"v.t").Num==1 || gjson.Get(LaunchEventbody,"v.t").Num==2{
+	if Utils.Assertin(gjson.Get(LaunchEventbody,"v.t").Num,typeslice){
 		fmt.Println("LaunchEvent字段t值正确!")
 	}else {
-		_, _ = fmt.Fprintf(file, "%v[ERROR]:[LaunchEvent]--%s的值错误：[当前:]%v\n", time.Now().Format("2006/01/02 15:04:05"),"LaunchEvent.t",gjson.Get(LaunchEventbody," v.t").Num)
+		_, _ = fmt.Fprintf(file, "%v[ERROR]:[LaunchEvent]--%s的值错误：[当前:]%v\n", time.Now().Format("2006/01/02 15:04:05"),"LaunchEvent.t",gjson.Get(LaunchEventbody,"v.t").Value())
+		_,_=fmt.Fprintf(file,"currentbody:%v\n",requestbody)
 		//Utils.EmailTo(fmt.Sprintf("%s捕捉到异常(LaunchEvent.t异常)\n,%s的值错误：[当前值:]%v请求体如下，请排查日志:\n\n%s",time.Now().Format("2006/01/02 15:04:05"),"LaunchEvent.t",gjson.Get(LaunchEventbody,"v.t").Value(),requestbody))
 
 	}
@@ -37,13 +39,14 @@ func LaunchEventBusiness(LaunchEventbody string,requestbody string,file io.Write
 		//tmi结构体字段校验
 		for _,value:=range gjson.Get(LaunchEventbody,"v.tmi").Array(){
 			Utils.AssertType(gjson.Get(value.String(),"ti").Type,3,file,gjson.Get(value.String(),"ti"),"ti",value.String(),"LaunchEvent")
-			Utils.AssertBool(gjson.Get(value.String(),"im").Type,file,gjson.Get(value.String(),"im"),"LaunchEvent.tmi.im","LaunchEvent")
+			Utils.AssertBool(gjson.Get(value.String(),"im").Type,file,gjson.Get(value.String(),"im").Value(),"LaunchEvent.tmi.im",LaunchEventbody,"LaunchEvent")
 			Utils.AssertType(gjson.Get(value.String(),"n").Type,3,file,gjson.Get(value.String(),"n"),"n",value.String(),"LaunchEvent")
 			Utils.AssertType(gjson.Get(value.String(),"mi").Type,5,file,gjson.Get(value.String(),"mi"),"mi",value.String(),"LaunchEvent")
 			for _,element:=range gjson.Get(value.String(),"mi").Array(){
 				Utils.AssertType(gjson.Get(element.String(),"st").Type,2,file,gjson.Get(element.String(),"st"),"st",element.String(),"LaunchEvent")
 				Utils.AssertType(gjson.Get(element.String(),"et").Type,2,file,gjson.Get(element.String(),"et"),"et",element.String(),"LaunchEvent")
 				Utils.AssertType(gjson.Get(element.String(),"n").Type,3,file,gjson.Get(element.String(),"n"),"n",element.String(),"LaunchEvent")
+				Utils.AssertBool(gjson.Get(element.String(),"ic").Type,file,gjson.Get(element.String(),"ic").Value(),"ic",element.String(),"LaunchEvent")
 				if gjson.Get(element.String(),"p").Exists(){
 					Utils.AssertType(gjson.Get(element.String(),"p").Type,3,file,gjson.Get(element.String(),"p"),"p",element.String(),"LaunchEvent")
 				}
@@ -69,13 +72,14 @@ func LaunchEventBusiness(LaunchEventbody string,requestbody string,file io.Write
 		//tmi结构体字段校验
 		for _,value:=range gjson.Get(LaunchEventbody,"v.tmi").Array(){
 			Utils.AssertType(gjson.Get(value.String(),"ti").Type,3,file,gjson.Get(value.String(),"ti"),"ti",value.String(),"LaunchEvent")
-			Utils.AssertBool(gjson.Get(value.String(),"im").Type,file,gjson.Get(value.String(),"im"),"LaunchEvent.tmi.im","LaunchEvent")
+			Utils.AssertBool(gjson.Get(value.String(),"im").Type,file,gjson.Get(value.String(),"im").Value(),"LaunchEvent.tmi.im",LaunchEventbody,"LaunchEvent")
 			Utils.AssertType(gjson.Get(value.String(),"n").Type,3,file,gjson.Get(value.String(),"n"),"n",value.String(),"LaunchEvent")
 			Utils.AssertType(gjson.Get(value.String(),"mi").Type,5,file,gjson.Get(value.String(),"mi"),"mi",value.String(),"LaunchEvent")
 			for _,element:=range gjson.Get(value.String(),"mi").Array(){
 				Utils.AssertType(gjson.Get(element.String(),"st").Type,2,file,gjson.Get(element.String(),"st"),"st",element.String(),"LaunchEvent")
 				Utils.AssertType(gjson.Get(element.String(),"et").Type,2,file,gjson.Get(element.String(),"et"),"et",element.String(),"LaunchEvent")
 				Utils.AssertType(gjson.Get(element.String(),"n").Type,3,file,gjson.Get(element.String(),"n"),"n",element.String(),"LaunchEvent")
+				Utils.AssertBool(gjson.Get(element.String(),"ic").Type,file,gjson.Get(element.String(),"ic").Value(),"ic",element.String(),"LaunchEvent")
 				if gjson.Get(element.String(),"p").Exists(){
 					Utils.AssertType(gjson.Get(element.String(),"p").Type,3,file,gjson.Get(element.String(),"p"),"p",element.String(),"LaunchEvent")
 				}

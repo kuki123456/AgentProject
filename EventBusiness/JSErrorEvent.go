@@ -13,7 +13,11 @@ func JSErrorEventBusiness(JSErrorEventbody string,requestbody string,file io.Wri
 	Utils.AssertType(gjson.Get(JSErrorEventbody,"v.pvid").Type,3,file,gjson.Get(JSErrorEventbody,"v.pvid"),"v.pvid",JSErrorEventbody,"JSErrorEvent")
 	//url 所属H5页面地址
 	Utils.AssertType(gjson.Get(JSErrorEventbody,"v.url").Type,3,file,gjson.Get(JSErrorEventbody,"v.url"),"v.url",JSErrorEventbody,"JSErrorEvent")
-    //name js文件名称
+	//"t":"",//title 所属H5页面title [非必要字段]
+	if gjson.Get(JSErrorEventbody,"v.t").Exists(){
+		Utils.AssertType(gjson.Get(JSErrorEventbody,"v.t").Type,3,file,gjson.Get(JSErrorEventbody,"v.url"),"v.url",JSErrorEventbody,"JSErrorEvent")
+	}
+	//name js文件名称
 	Utils.AssertType(gjson.Get(JSErrorEventbody,"v.n").Type,3,file,gjson.Get(JSErrorEventbody,"v.n"),"v.n",JSErrorEventbody,"JSErrorEvent")
 //et,js错误类型
 	Utils.AssertType(gjson.Get(JSErrorEventbody,"v.et").Type,3,file,gjson.Get(JSErrorEventbody,"v.et"),"v.et",JSErrorEventbody,"JSErrorEvent")

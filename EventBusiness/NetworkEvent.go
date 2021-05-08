@@ -12,10 +12,14 @@ func NetworkBusiness(networkbody string,requestbody string,file io.Writer){
 	//网络事件实体非空字段类型判断,针对必要字段校验
 	//ru请求地址字段类型判断
 	Utils.AssertType(gjson.Get(networkbody,"v.ru").Type,3,file,gjson.Get(networkbody,"v.ru"),"v.ru",networkbody,"NetworkEvent")
-	//method 请求方式,m
-	Utils.AssertType(gjson.Get(networkbody,"v.m").Type,3,file,gjson.Get(networkbody,"v.m"),"v.m",networkbody,"NetworkEvent")
-	//target ip 目标IP,ti
-	Utils.AssertType(gjson.Get(networkbody,"v.ti").Type,3,file,gjson.Get(networkbody,"v.ti"),"v.ti",networkbody,"NetworkEvent")
+	//method 请求方式,非必要字段
+	if gjson.Get(networkbody,"v.m").Exists(){
+		Utils.AssertType(gjson.Get(networkbody,"v.m").Type,3,file,gjson.Get(networkbody,"v.m"),"v.m",networkbody,"NetworkEvent")
+	}
+		//target ip 目标IP,ti 非必要字段
+	if gjson.Get(networkbody,"v.ti").Exists(){
+		Utils.AssertType(gjson.Get(networkbody,"v.ti").Type,3,file,gjson.Get(networkbody,"v.ti"),"v.ti",networkbody,"NetworkEvent")
+	}
 	//target port 目标端口tp
 	Utils.AssertType(gjson.Get(networkbody,"v.tp").Type,2,file,gjson.Get(networkbody,"v.tp"),"v.tp",networkbody,"NetworkEvent")
 	//dns time dns解析时间
@@ -23,7 +27,7 @@ func NetworkBusiness(networkbody string,requestbody string,file io.Writer){
 	if gjson.Get(networkbody,"v.dt").Num ==0 || 999<=gjson.Get(networkbody,"v.dt").Num{
 		fmt.Println("dt值范围通过")
 	}else{
-		_, _ = fmt.Fprintf(file, "%v[ERROR]:[NetworkEvent]--%s的值错误：[当前值:]%v\n", time.Now().Format("2006/01/02 15:04:05"),gjson.Get(networkbody,"v.dt").Num)
+		_, _ = fmt.Fprintf(file, "%v[ERROR]:[NetworkEvent]--%s的值错误：[当前值:]%v\n", time.Now().Format("2006/01/02 15:04:05"),"v.dt",gjson.Get(networkbody,"v.dt").Num)
 		//Utils.EmailTo(fmt.Sprintf("%s捕捉到异常(network.dt值异常)\n,%s的值错误：[当前值:]%v请求体如下，请排查日志:\n\n%s",time.Now().Format("2006/01/02 15:04:05"),"network.dt",gjson.Get(networkbody,"v.dt").Num,requestbody))
 	}
 	//connect time tcp建连时间ct
@@ -31,7 +35,7 @@ func NetworkBusiness(networkbody string,requestbody string,file io.Writer){
 	if gjson.Get(networkbody,"v.ct").Num ==0 || 999<=gjson.Get(networkbody,"v.ct").Num{
 		fmt.Println("ct值范围通过")
 	}else{
-		_, _ = fmt.Fprintf(file, "%v[ERROR]:[NetworkEvent]--%s的值错误：[当前值:]%v\n", time.Now().Format("2006/01/02 15:04:05"),gjson.Get(networkbody,"v.ct").Num)
+		_, _ = fmt.Fprintf(file, "%v[ERROR]:[NetworkEvent]--%s的值错误：[当前值:]%v\n", time.Now().Format("2006/01/02 15:04:05"),"v.ct",gjson.Get(networkbody,"v.ct").Num)
 		//Utils.EmailTo(fmt.Sprintf("%s捕捉到异常(network.ct值异常)\n,%s的值错误：[当前值:]%v请求体如下，请排查日志:\n\n%s",time.Now().Format("2006/01/02 15:04:05"),"network.ct",gjson.Get(networkbody,"v.ct").Num,requestbody))
 	}
 	//ssl time ssl解析时间sslt
@@ -39,7 +43,7 @@ func NetworkBusiness(networkbody string,requestbody string,file io.Writer){
 	if gjson.Get(networkbody,"v.sslt").Num ==0 || 999<=gjson.Get(networkbody,"v.sslt").Num{
 		fmt.Println("sslt值范围通过")
 	}else{
-		_, _ = fmt.Fprintf(file, "%v[ERROR]:[NetworkEvent]--%s的值错误：[当前值:]%v\n", time.Now().Format("2006/01/02 15:04:05"),gjson.Get(networkbody,"v.sslt").Num)
+		_, _ = fmt.Fprintf(file, "%v[ERROR]:[NetworkEvent]--%s的值错误：[当前值:]%v\n", time.Now().Format("2006/01/02 15:04:05"),"v.sslt",gjson.Get(networkbody,"v.sslt").Num)
 		//Utils.EmailTo(fmt.Sprintf("%s捕捉到异常(network.sslt值异常)\n,%s的值错误：[当前值:]%v请求体如下，请排查日志:\n\n%s",time.Now().Format("2006/01/02 15:04:05"),"network.sslt",gjson.Get(networkbody,"v.sslt").Num,requestbody))
 	}
 	//request time 请求时间 rt
@@ -47,7 +51,7 @@ func NetworkBusiness(networkbody string,requestbody string,file io.Writer){
 	if gjson.Get(networkbody,"v.rt").Num ==0 || 999<=gjson.Get(networkbody,"v.rt").Num{
 		fmt.Println("rt值范围通过")
 	} else{
-		_, _ = fmt.Fprintf(file, "%v[ERROR]:[NetworkEvent]--%s的值错误：[当前值:]%v\n", time.Now().Format("2006/01/02 15:04:05"),gjson.Get(networkbody,"v.rt").Num)
+		_, _ = fmt.Fprintf(file, "%v[ERROR]:[NetworkEvent]--%s的值错误：[当前值:]%v\n", time.Now().Format("2006/01/02 15:04:05"),"v.rt",gjson.Get(networkbody,"v.rt").Num)
 		//Utils.EmailTo(fmt.Sprintf("%s捕捉到异常(network.rt值异常)\n,%s的值错误：[当前值:]%v请求体如下，请排查日志:\n\n%s",time.Now().Format("2006/01/02 15:04:05"),"network.rt",gjson.Get(networkbody,"v.rt").Num,requestbody))
 	}
 	//response time 响应时间 「有过程>=999，无过程0」[单位us，非空字段]
@@ -55,7 +59,7 @@ func NetworkBusiness(networkbody string,requestbody string,file io.Writer){
 	if gjson.Get(networkbody,"v.rti").Num ==0 || 999<=gjson.Get(networkbody,"v.rti").Num{
 		fmt.Println("rti值范围通过")
 	}else{
-		_, _ = fmt.Fprintf(file, "%v[ERROR]:[NetworkEvent]--%s的值错误：[当前值:]%v\n", time.Now().Format("2006/01/02 15:04:05"),gjson.Get(networkbody,"v.rti").Num)
+		_, _ = fmt.Fprintf(file, "%v[ERROR]:[NetworkEvent]--%s的值错误：[当前值:]%v\n", time.Now().Format("2006/01/02 15:04:05"),"v.rti",gjson.Get(networkbody,"v.rti").Num)
 		//Utils.EmailTo(fmt.Sprintf("%s捕捉到异常(network.rti值异常)\n,%s的值错误：[当前值:]%v请求体如下，请排查日志:\n\n%s",time.Now().Format("2006/01/02 15:04:05"),"network.rti",gjson.Get(networkbody,"v.rti").Num,requestbody))
 	}
 	//download time 下载用时 「有过程>=999，无过程0」[单位us，非空字段]
@@ -63,12 +67,21 @@ func NetworkBusiness(networkbody string,requestbody string,file io.Writer){
 	if gjson.Get(networkbody,"v.dti").Num ==0 || 999<=gjson.Get(networkbody,"v.dti").Num{
 		fmt.Println("dti值范围通过")
 	}else{
-		_, _ = fmt.Fprintf(file, "%v[ERROR]:[NetworkEvent]--%s的值错误：[当前值:]%v\n", time.Now().Format("2006/01/02 15:04:05"),gjson.Get(networkbody,"v.dti").Num)
+		_, _ = fmt.Fprintf(file, "%v[ERROR]:[NetworkEvent]--%s的值错误：[当前值:]%v\n", time.Now().Format("2006/01/02 15:04:05"),"v.dti",gjson.Get(networkbody,"v.dti").Num)
 		//Utils.EmailTo(fmt.Sprintf("%s捕捉到异常(network.dti值异常)\n,%s的值错误：[当前值:]%v请求体如下，请排查日志:\n\n%s",time.Now().Format("2006/01/02 15:04:05"),"network.dti",gjson.Get(networkbody,"v.dti").Num,requestbody))
 	}
 	//download size 下载大小 [单位Byte，非空字段]
 	Utils.AssertType(gjson.Get(networkbody,"v.ds").Type,2,file,gjson.Get(networkbody,"v.ds"),"v.ds",networkbody,"NetworkEvent")
-	//protocol type 协议类型 「1:h1,2:h1s,3:h2,5:ws,6:wss,7:tcp,10:udp」[非空字段]
+	//request data size 请求上传数据大小 [单位Byte，非空字段]
+	Utils.AssertType(gjson.Get(networkbody,"v.rds").Type,2,file,gjson.Get(networkbody,"v.rds"),"v.rds",networkbody,"NetworkEvent")
+	////protocol type 协议类型「0:其它协议,1:h1,2:h1s,3:h2,5:ws,6:wss,7:tcp,10:udp,11:quic」[非空字段]
+	pt_eum:=[]float64{0,1,2,3,5,6,7,10,11}
+	if Utils.Assertin(gjson.Get(networkbody,"v.pt").Num,pt_eum){
+		fmt.Println("pt值在范围中!")
+	}else {
+		_, _ = fmt.Fprintf(file, "%v[ERROR]:[NetworkEvent]--%s的值错误：[当前:]%v,[期望:]%v\n", time.Now().Format("2006/01/02 15:04:05"),"pt",gjson.Get(networkbody,"v.pt").Num,pt_eum)
+		//Utils.EmailTo(fmt.Sprintf("%s捕捉到异常(art值不在范围内)\n,%s的值类型错误：[当前:]%v,[期望:]%v请求体如下，请排查日志:\n%s",time.Now().Format("2006/01/02 15:04:05"),"art",gjson.Get(networkbody,"v.art").Num,ArtArrary,networkbody))
+	}
 	Utils.AssertType(gjson.Get(networkbody,"v.pt").Type,2,file,gjson.Get(networkbody,"v.pt"),"v.pt",networkbody,"NetworkEvent")
 	//art app request type App请求类型枚举
 	ArtArrary :=[]float64{0,1,2,3,10}
@@ -81,7 +94,7 @@ func NetworkBusiness(networkbody string,requestbody string,file io.Writer){
 	}
 	Utils.AssertType(gjson.Get(networkbody,"v.art").Type,2,file,gjson.Get(networkbody,"v.art"),"v.art",networkbody,"NetworkEvent")
 	//“ic”:true,//is custom 是否是自定义 [默认值false,非空字段]
-	Utils.AssertBool(gjson.Get(networkbody,"v.ic").Type,file,gjson.Get(networkbody,"v.ic"),"v.ic","NetworkEvent")
+	Utils.AssertBool(gjson.Get(networkbody,"v.ic").Type,file,gjson.Get(networkbody,"v.ic").Value(),"v.ic",networkbody,"NetworkEvent")
 	//非必要字段校验
 	//cna
 	if gjson.Get(networkbody,"v.cna").Exists(){
@@ -143,10 +156,28 @@ func NetworkBusiness(networkbody string,requestbody string,file io.Writer){
 	}else {
 		fmt.Println("该网络请求没有pvid字段!")
 	}
-	//"cbh":"",//custom business header 自定义业务头 [非必要字段]
-	if gjson.Get(networkbody,"v.cbh").Exists() {
-		Utils.AssertType(gjson.Get(networkbody,"v.cbh").Type,3,file,gjson.Get(networkbody,"v.cbh"),"v.cbh",networkbody,"NetworkEvent")
+	//"cbh":"",//custom business header 自定义业务头 [非必要字段],7.2.0废弃
+	//if gjson.Get(networkbody,"v.cbh").Exists() {
+	//	Utils.AssertType(gjson.Get(networkbody,"v.cbh").Type,3,file,gjson.Get(networkbody,"v.cbh"),"v.cbh",networkbody,"NetworkEvent")
+	//}else {
+	//	fmt.Println("该网络请求没有cbh字段!")
+	//}
+	//"cbhq":"", //custom business header query string 请求头自定义业务字段数据 query string形式（字符做URL Encoding）「key0=value0&key1=value1」 [非必要字段]
+	if gjson.Get(networkbody,"v.cbhq").Exists() {
+		Utils.AssertType(gjson.Get(networkbody,"v.cbhq").Type,3,file,gjson.Get(networkbody,"v.cbhq"),"v.cbhq",networkbody,"NetworkEvent")
 	}else {
-		fmt.Println("该网络请求没有cbh字段!")
+		fmt.Println("该网络请求没有cbhq字段!")
+	}
+	//"cbbq":"", //custom business body query string 请求体自定义业务字段数据query string形式（字符做URL Encoding）「key0=value0&key1=value1」 [非必要字段]
+	if gjson.Get(networkbody,"v.cbbq").Exists() {
+		Utils.AssertType(gjson.Get(networkbody,"v.cbbq").Type,3,file,gjson.Get(networkbody,"v.cbbq"),"v.cbbq",networkbody,"NetworkEvent")
+	}else {
+		fmt.Println("该网络请求没有cbbq字段!")
+	}
+	//"cbq":"",  //custom business query string URL参数自定义业务字段数据query string（字符做URL Encoding）「key0=value0&key1=value1」 [非必要字段]
+	if gjson.Get(networkbody,"v.cbq").Exists() {
+		Utils.AssertType(gjson.Get(networkbody,"v.cbq").Type,3,file,gjson.Get(networkbody,"v.cbq"),"v.cbq",networkbody,"NetworkEvent")
+	}else {
+		fmt.Println("该网络请求没有cbq字段!")
 	}
 }

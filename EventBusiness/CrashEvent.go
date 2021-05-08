@@ -11,7 +11,7 @@ func CrashEventBusiness(CrashEventbody string,requestbody string,file io.Writer)
 	Utils.AssertEventSin(CrashEventbody, file, requestbody, "[CrashEvent]")
 	//"ic":true,//iscustom 是否是自定义 [默认值false,非空字段]
 	//先判断是否是自定义异常
-	Utils.AssertBool(gjson.Get(CrashEventbody,"v.ic").Type,file,gjson.Get(CrashEventbody,"v.ic").Value(),"v.ic",CrashEventbody)
+	Utils.AssertBool(gjson.Get(CrashEventbody,"v.ic").Type,file,gjson.Get(CrashEventbody,"v.ic").Value(),"v.ic",CrashEventbody,"CrashEvent")
 	if gjson.Get(CrashEventbody,"v.ic").Bool(){
 		Utils.AssertType(gjson.Get(CrashEventbody,"v.t").Type,3,file,gjson.Get(CrashEventbody,"v.t").Value(),"v.t",CrashEventbody,"CrashEvent")
 		Utils.AssertType(gjson.Get(CrashEventbody,"v.p").Type,3,file,gjson.Get(CrashEventbody,"v.p").Value(),"v.p",CrashEventbody,"CrashEvent")

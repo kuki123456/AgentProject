@@ -58,45 +58,55 @@ func H5EventBusiness(H5Eventbody string,requestbody string,file io.Writer){
 	Utils.AssertType(gjson.Get(H5Eventbody,"v.wpi.les").Type,2,file,gjson.Get(H5Eventbody,"v.wpi.les").Value(),"v.wpi.les",H5Eventbody,"H5Event")
 	//    "lee":1,//load event end [相对值] (返回当load事件结束，即加载事件完成时的Unix毫秒时间戳。如果这个事件还未被发送，或者尚未完成，它的值将会是0)
 	Utils.AssertType(gjson.Get(H5Eventbody,"v.wpi.lee").Type,2,file,gjson.Get(H5Eventbody,"v.wpi.lee").Value(),"v.wpi.lee",H5Eventbody,"H5Event")
-	//}
-	// "wri":[{}],//WebviewResourceInfo 页面资源数据 [非必要字段]
-	Utils.AssertType(gjson.Get(H5Eventbody,"v.wri").Type,5,file,gjson.Get(H5Eventbody,"v.wri").Value(),"v.wri",H5Eventbody,"H5Event")
-	//"WebviewResourceInfo": //该结构内时间单位统一为ms
-	//{
-	for _,val:=range gjson.Get(H5Eventbody,"v.wri").Array() {
-		//	"st":1,//start time 发生时间 [时间戳，非空字段]
-		Utils.AssertType(gjson.Get(val.String(), "st").Type, 2, file, gjson.Get(val.String(), "st").Value(), "st", val.String(),"H5Event")
-		//   "rt":"",//resource type 资源类型 [非空字段]
-		Utils.AssertType(gjson.Get(val.String(), "rt").Type, 3, file, gjson.Get(val.String(), "rt").Value(), "rt", val.String(),"H5Event")
-		//   "name":"",//name 资源名称 [非空字段]
-		Utils.AssertType(gjson.Get(val.String(), "name").Type, 3, file, gjson.Get(val.String(), "name").Value(), "name", val.String(),"H5Event")
-		//   "dura":1,//duration 加载时间[相对时间，非空字段]
-		Utils.AssertType(gjson.Get(val.String(), "dura").Type, 2, file, gjson.Get(val.String(), "dura").Value(), "dura", val.String(),"H5Event")
-		//   "fs":1,//fetch start [相对时间，非空字段] 为浏览器已经准备好去使用HTTP请求抓取文档之时的 Unix毫秒时间戳。这一时刻在检查应用的缓存之前。
-		Utils.AssertType(gjson.Get(val.String(), "fs").Type, 2, file, gjson.Get(val.String(), "fs").Value(), "fs", val.String(),"H5Event")
-		//   "dls":1,//domain lookup start [相对时间，非空字段] 为域名开始解析之时的 Unix毫秒时间戳
-		Utils.AssertType(gjson.Get(val.String(), "dls").Type, 2, file, gjson.Get(val.String(), "dls").Value(), "dls", val.String(),"H5Event")
-		//   "dle":1,//domain lookup end [相对时间，非空字段] 为解析域名结束时的 Unix毫秒时间戳
-		Utils.AssertType(gjson.Get(val.String(), "dle").Type, 2, file, gjson.Get(val.String(), "dle").Value(), "dle", val.String(),"H5Event")
-		//   "cs":1,//connect start [相对时间，非空字段] 请求连接被发送到网络之时的Unix毫秒时间戳。如果传输层报告错误并且连接的建立重新开始，则把最后建立连接的开始时间作为该值。
-		Utils.AssertType(gjson.Get(val.String(), "cs").Type, 2, file, gjson.Get(val.String(), "cs").Value(), "cs", val.String(),"H5Event")
-		//   "ce":1,//connect end [相对时间，非空字段] 它以毫秒为单位，代表了网络链接建立的时间节点。如果传输层报告了错误或者链接又被重新建立，则采用最后一次链接建立的时间。如果链接是长久的，那么这个值等同于PerformanceTiming.fetchStart。
-		Utils.AssertType(gjson.Get(val.String(), "ce").Type, 2, file, gjson.Get(val.String(), "ce").Value(), "ce", val.String(),"H5Event")
-		//   "scs":1,//secure connection start [相对时间，非空字段] 为安全连接握手开始的时刻的 Unix毫秒时间戳
-		Utils.AssertType(gjson.Get(val.String(), "scs").Type, 2, file, gjson.Get(val.String(), "scs").Value(), "scs", val.String(),"H5Event")
-		//   "reqs":1,//request start [相对时间，非空字段] 为浏览器发送从服务器或者缓存获取实际文档的请求之时的 Unix毫秒时间戳
-		Utils.AssertType(gjson.Get(val.String(), "reqs").Type, 2, file, gjson.Get(val.String(), "reqs").Value(), "reqs", val.String(),"H5Event")
-		//   "rsps":1,//response start [相对时间，非空字段] 为浏览器从服务器、缓存或者本地资源接收到响应的第一个字节之时的 Unix毫秒时间戳。
-		Utils.AssertType(gjson.Get(val.String(), "rsps").Type, 2, file, gjson.Get(val.String(), "rsps").Value(), "rsps", val.String(),"H5Event")
-		//   "rspe":1,//response end [相对时间，非空字段] 为浏览器从服务器、缓存或者本地资源接收响应的最后一个字节或者连接被关闭之时的 Unix毫秒时间戳。
-		Utils.AssertType(gjson.Get(val.String(), "rspe").Type, 2, file, gjson.Get(val.String(), "rspe").Value(), "rspe", val.String(),"H5Event")
-		//   "ts":1,//transfer size [相对时间，非空字段] the size (in octets) of the fetched resource. The size includes the response header fields plus the response payload body
-		Utils.AssertType(gjson.Get(val.String(), "ts").Type, 2, file, gjson.Get(val.String(), "ts").Value(), "ts", val.String(),"H5Event")
-		//   "ebs":1,//encoded body size [相对时间，非空字段] the size (in octets) received from the fetch (HTTP or cache), of the payload body, before removing any applied content-codings.
-		Utils.AssertType(gjson.Get(val.String(), "ebs").Type, 2, file, gjson.Get(val.String(), "ebs").Value(), "ebs", val.String(),"H5Event")
-		//   "dbs":1,//decoded body size [相对时间，非空字段] the size (in octets) received from the fetch (HTTP or cache) of the message body, after removing any applied content-codings.
-		Utils.AssertType(gjson.Get(val.String(), "dbs").Type, 2, file, gjson.Get(val.String(), "dbs").Value(), "dbs", val.String(),"H5Event")
-		//}
+	//"fp":1,//Firs Paint [相对值] 首次渲染的时间，可看做是页面的白屏时间。
+	Utils.AssertType(gjson.Get(H5Eventbody,"v.wpi.fp").Type,2,file,gjson.Get(H5Eventbody,"v.wpi.fp").Value(),"v.wpi.fp",H5Eventbody,"H5Event")
+	//"fcp":1,//Firs Contentful Paint [相对值] 首次内容绘制，标记浏览器渲染来自DOM第一位内容的时间点，该内容可能是文本、图像、SVG甚至元素。
+	Utils.AssertType(gjson.Get(H5Eventbody,"v.wpi.fcp").Type,2,file,gjson.Get(H5Eventbody,"v.wpi.fcp").Value(),"v.wpi.fcp",H5Eventbody,"H5Event")
+	//"lcp":1,//Largest Contentful Paint [相对值] 最大内容渲染，代表页面的首屏用时。
+	Utils.AssertType(gjson.Get(H5Eventbody,"v.wpi.lcp").Type,2,file,gjson.Get(H5Eventbody,"v.wpi.lcp").Value(),"v.wpi.lcp",H5Eventbody,"H5Event")
+
+// "wri":[{}],//WebviewResourceInfo 页面资源数据 [非必要字段]
+	if gjson.Get(H5Eventbody,"v.wri").Exists() {
+		Utils.AssertType(gjson.Get(H5Eventbody,"v.wri").Type,5,file,gjson.Get(H5Eventbody,"v.wri").Value(),"v.wri",H5Eventbody,"H5Event")
+		//"WebviewResourceInfo": //该结构内时间单位统一为ms
+		//{
+		for _,val:=range gjson.Get(H5Eventbody,"v.wri").Array() {
+			//	"st":1,//start time 发生时间 [时间戳，非空字段]
+			Utils.AssertType(gjson.Get(val.String(), "st").Type, 2, file, gjson.Get(val.String(), "st").Value(), "st", val.String(),"H5Event")
+			//   "rt":"",//resource type 资源类型 [非空字段]
+			Utils.AssertType(gjson.Get(val.String(), "rt").Type, 3, file, gjson.Get(val.String(), "rt").Value(), "rt", val.String(),"H5Event")
+			//   "name":"",//name 资源名称 [非空字段]
+			Utils.AssertType(gjson.Get(val.String(), "name").Type, 3, file, gjson.Get(val.String(), "name").Value(), "name", val.String(),"H5Event")
+			//   "dura":1,//duration 加载时间[相对时间，非空字段]
+			Utils.AssertType(gjson.Get(val.String(), "dura").Type, 2, file, gjson.Get(val.String(), "dura").Value(), "dura", val.String(),"H5Event")
+			//   "fs":1,//fetch start [相对时间，非空字段] 为浏览器已经准备好去使用HTTP请求抓取文档之时的 Unix毫秒时间戳。这一时刻在检查应用的缓存之前。
+			Utils.AssertType(gjson.Get(val.String(), "fs").Type, 2, file, gjson.Get(val.String(), "fs").Value(), "fs", val.String(),"H5Event")
+			//   "dls":1,//domain lookup start [相对时间，非空字段] 为域名开始解析之时的 Unix毫秒时间戳
+			Utils.AssertType(gjson.Get(val.String(), "dls").Type, 2, file, gjson.Get(val.String(), "dls").Value(), "dls", val.String(),"H5Event")
+			//   "dle":1,//domain lookup end [相对时间，非空字段] 为解析域名结束时的 Unix毫秒时间戳
+			Utils.AssertType(gjson.Get(val.String(), "dle").Type, 2, file, gjson.Get(val.String(), "dle").Value(), "dle", val.String(),"H5Event")
+			//   "cs":1,//connect start [相对时间，非空字段] 请求连接被发送到网络之时的Unix毫秒时间戳。如果传输层报告错误并且连接的建立重新开始，则把最后建立连接的开始时间作为该值。
+			Utils.AssertType(gjson.Get(val.String(), "cs").Type, 2, file, gjson.Get(val.String(), "cs").Value(), "cs", val.String(),"H5Event")
+			//   "ce":1,//connect end [相对时间，非空字段] 它以毫秒为单位，代表了网络链接建立的时间节点。如果传输层报告了错误或者链接又被重新建立，则采用最后一次链接建立的时间。如果链接是长久的，那么这个值等同于PerformanceTiming.fetchStart。
+			Utils.AssertType(gjson.Get(val.String(), "ce").Type, 2, file, gjson.Get(val.String(), "ce").Value(), "ce", val.String(),"H5Event")
+			//   "scs":1,//secure connection start [相对时间，非空字段] 为安全连接握手开始的时刻的 Unix毫秒时间戳
+			Utils.AssertType(gjson.Get(val.String(), "scs").Type, 2, file, gjson.Get(val.String(), "scs").Value(), "scs", val.String(),"H5Event")
+			//   "reqs":1,//request start [相对时间，非空字段] 为浏览器发送从服务器或者缓存获取实际文档的请求之时的 Unix毫秒时间戳
+			Utils.AssertType(gjson.Get(val.String(), "reqs").Type, 2, file, gjson.Get(val.String(), "reqs").Value(), "reqs", val.String(),"H5Event")
+			//   "rsps":1,//response start [相对时间，非空字段] 为浏览器从服务器、缓存或者本地资源接收到响应的第一个字节之时的 Unix毫秒时间戳。
+			Utils.AssertType(gjson.Get(val.String(), "rsps").Type, 2, file, gjson.Get(val.String(), "rsps").Value(), "rsps", val.String(),"H5Event")
+			//   "rspe":1,//response end [相对时间，非空字段] 为浏览器从服务器、缓存或者本地资源接收响应的最后一个字节或者连接被关闭之时的 Unix毫秒时间戳。
+			Utils.AssertType(gjson.Get(val.String(), "rspe").Type, 2, file, gjson.Get(val.String(), "rspe").Value(), "rspe", val.String(),"H5Event")
+			//   "ts":1,//transfer size [相对时间，非空字段] the size (in octets) of the fetched resource. The size includes the response header fields plus the response payload body
+			Utils.AssertType(gjson.Get(val.String(), "ts").Type, 2, file, gjson.Get(val.String(), "ts").Value(), "ts", val.String(),"H5Event")
+			//   "ebs":1,//encoded body size [相对时间，非空字段] the size (in octets) received from the fetch (HTTP or cache), of the payload body, before removing any applied content-codings.
+			Utils.AssertType(gjson.Get(val.String(), "ebs").Type, 2, file, gjson.Get(val.String(), "ebs").Value(), "ebs", val.String(),"H5Event")
+			//   "dbs":1,//decoded body size [相对时间，非空字段] the size (in octets) received from the fetch (HTTP or cache) of the message body, after removing any applied content-codings.
+			Utils.AssertType(gjson.Get(val.String(), "dbs").Type, 2, file, gjson.Get(val.String(), "dbs").Value(), "dbs", val.String(),"H5Event")
+			//}
+
+		}
 	}
+
 
 }
