@@ -2,12 +2,13 @@ package Utils
 
 import (
 	"fmt"
+	uuid "github.com/satori/go.uuid"
 	"io"
 	"io/ioutil"
 	"net/http"
 )
 
-func UPLOADData(adress string,body io.Reader){
+func POSTCOMMON(adress string,body io.Reader){
 	client := &http.Client{}
 	requestPost, err := http.NewRequest("POST", adress,body)
 	resp, err := client.Do(requestPost)
@@ -43,4 +44,22 @@ func CONFIGData(adress string,body io.Reader) string{
 	fmt.Printf("resp status code:[%d]\n", resp.StatusCode)
 	fmt.Printf("resp body data:[%s]\n", string(bodyContent))
 	return string(bodyContent)
+}
+func UPLOADData(adress string,body io.Reader){
+	client := &http.Client{}
+	requestPost, err := http.NewRequest("POST", adress,body)
+	resp, err := client.Do(requestPost)
+	u2:= uuid.NewV4()
+	requestPost.Header.Set("ProtoType","json")
+	requestPost.Header.Set("Br-Content-Encoding","gzip")
+	requestPost.Header.Set("brkey",u2.String())
+	requestPost.Header.Add("Accept-Encoding", "gzip")
+	if err != nil {
+		fmt.Printf("get request failed, err:[%s]", err.Error())
+		return
+	}
+	defer resp.Body.Close()
+	bodyContent, err := ioutil.ReadAll(resp.Body)
+	fmt.Printf("resp status code:[%d]\n", resp.StatusCode)
+	fmt.Printf("resp body data:[%s]\n", string(bodyContent))
 }

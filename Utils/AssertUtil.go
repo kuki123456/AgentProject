@@ -70,7 +70,7 @@ func AssertEventSin(BusinessBody string,file io.Writer,requestbody string,Busine
 	if time.Unix(int64(ent.(float64)/1000/1000),0).Format("2006-01-02" )==time.Now().Format("2006-01-02"){
 		fmt.Println("ent校验正确!")
 	}else {
-		_, _ = fmt.Fprintf(file, "%v[ERROR]:%s的ent上报异常，值为:%v\n", time.Now().Format("2006/01/02 15:04:05"),BusinessName,ent)
+		_, _ = fmt.Fprintf(file, "%v[ERROR]:%s的ent上报异常，值为:%v\n%v\n", time.Now().Format("2006/01/02 15:04:05"),BusinessName,ent,requestbody)
 		//EmailTo(fmt.Sprintf("%s--%s捕捉到异常(ent上报异常):\n,ent的值为:%v\n,请求体为:%s",time.Now().Format("2006/01/02 15:04:05"),BusinessName,ent,BusinessBody))
 
 	}
